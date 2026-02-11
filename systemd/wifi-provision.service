@@ -3,9 +3,11 @@ Description=WiFi Provisioning Service
 After=network.target
 
 [Service]
-Type=oneshot
-ExecStart=/usr/local/bin/wifi_boot.sh
-RemainAfterExit=yes
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/rpi-wifi-connectivity-through-hotspot
+ExecStart=/home/pi/rpi-wifi-connectivity-through-hotspot/venv/bin/python /home/pi/rpi-wifi-connectivity-through-hotspot/wifi_boot.sh
+Restart=always
 
 [Install]
 WantedBy=multi-user.target

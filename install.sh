@@ -1,23 +1,43 @@
 #!/bin/bash
 
-echo "Installing WiFi Provisioning System..."
+set -e
 
+PROJECT_DIR="/home/pi/rpi-wifi-connectivity-through-hotspot"
+SERVICE_NAME="wifi-provision.service"
+
+echo "Updating system..."
 sudo apt update
-sudo apt install -y hostapd dnsmasq network-manager python3 python3-pip
 
-pip3 install flask
+echo "Installing required packages..."
+sudo apt install -y \
+    python3 \
+    python3-venv \
+    hostapd \
+    dnsmasq \
+    network-manager
 
-# Copy scripts to system location
-sudo cp wifi_boot.sh /usr/local/bin/
-sudo chmod +x /usr/local/bin/wifi_boot.sh
-sudo cp wifi_ui.py /usr/local/bin/
+echo "Stopping conflicting services..."
+sudo systemctl stop hostapd || true
+sudo systemctl stop dnsmasq || true
+sudo systemctl stop NetworkManager || true
 
-# Copy systemd service
-sudo cp systemd/wifi-provision.service /etc/systemd/system/
+echo "Creating Python virtual environment..."
+cd $PROJECT_DIR
+python3 -m venv venv
 
-# Reload and enable service
+echo "Installing Python dependencies..."
+source venv/bin/activate
+pip install --upgrade pip
+pip install -r requirements.txt
+deactivate
+
+echo "Setting permissions..."
+chmod +x wifi_boot.sh
+
+echo "Installing systemd service..."
+sudo cp systemd/$SERVICE_NAME /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable wifi-provision.service
+sudo systemctl enable $SERVICE_NAME
 
 echo "Installation complete. Rebooting..."
 sudo reboot
