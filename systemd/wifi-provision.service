@@ -1,0 +1,11 @@
+[Unit]
+Description=WiFi Provisioning Service
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/pi/rpi-wifi-connectivity-through-hotspot/wifi_boot.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
