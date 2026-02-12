@@ -1,3 +1,26 @@
-wifi_boot.log
+# Python cache
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+
+# Logs
+*.log
+wifi_boot.log
+
+# Credentials (sensitive)
+wifi_credentials.conf
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# system files accidentally copied
+*.swp
