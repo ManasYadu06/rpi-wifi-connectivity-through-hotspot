@@ -39,7 +39,7 @@ systemctl start hostapd >> $LOG 2>&1
 echo "Hotspot started. Launching UI..." >> $LOG
 
 # Start Flask UI in background
-/usr/bin/python3 "$BASE_DIR/wifi_ui.py" >> "$LOG" 2>&1 &
+"$BASE_DIR/venv/bin/python" "$BASE_DIR/wifi_ui.py" >> "$LOG" 2>&1 &
 
 exit 0
 
