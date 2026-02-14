@@ -4,6 +4,7 @@ After=network.target
 
 [Service]
 Type=oneshot
+User=root
 ExecStart=/home/pi/rpi-wifi-connectivity-through-hotspot/wifi_boot.sh
 RemainAfterExit=yes
 
