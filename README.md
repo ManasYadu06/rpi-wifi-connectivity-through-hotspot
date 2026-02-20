@@ -32,7 +32,9 @@ Disable services (managed by script):
 
 6. Reboot
       sudo reboot
-
+ 
+7. To disable power_save
+      iw dev wlan0 set power_save off
 Access UI
 
 If hotspot starts:
