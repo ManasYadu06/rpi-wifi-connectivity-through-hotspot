@@ -12,7 +12,7 @@ Disable services (managed by script):
       sudo systemctl disable dnsmasq
 
 2. Clone Repository
-      git clone https://github.com/YOUR_USERNAME/rpi-wifi-connectivity-through-hotspot.git
+      git clone https://github.com/ManasYadu06/rpi-wifi-connectivity-through-hotspot.git
       cd rpi-wifi-connectivity-through-hotspot
 
 3. Create Virtual Environment
@@ -33,8 +33,8 @@ Disable services (managed by script):
 6. Reboot
       sudo reboot
  
-7. To disable power_save
-      iw dev wlan0 set power_save off
+8. To disable power_save
+      sudo iw dev wlan0 set power_save off
 Access UI
 
 If hotspot starts:
