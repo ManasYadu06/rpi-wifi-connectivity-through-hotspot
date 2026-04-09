@@ -13,25 +13,32 @@ Disable services (managed internally by the provisioning script):
 
 sudo systemctl disable hostapd
 sudo systemctl disable dnsmasq
+
 📂 Clone Repository
 git clone https://github.com/ManasYadu06/rpi-wifi-connectivity-through-hotspot.git
 cd rpi-wifi-connectivity-through-hotspot
+
 🐍 Create Virtual Environment
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 deactivate
+
 ⚙️ Copy Configuration Files
 sudo cp configs/hostapd.conf /etc/hostapd/hostapd.conf
 sudo cp configs/dnsmasq.conf /etc/dnsmasq.conf
+
 🔧 Install Systemd Service
 sudo cp systemd/wifi-provision.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable wifi-provision.service
+
 🔁 Reboot
 sudo reboot
+
 🔋 Disable Wi-Fi Power Save (Recommended)
 sudo iw dev wlan0 set power_save off
+
 🌐 Access Provisioning UI
 
 When hotspot mode is active:
