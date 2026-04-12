@@ -84,9 +84,9 @@ try_wifi() {
 start_hotspot() {
 
     echo "Starting hotspot..." >> "$LOG"
-
+   
     systemctl stop NetworkManager >> "$LOG" 2>&1
-
+    sleep 3
     ip addr flush dev wlan0
     ip addr add 10.0.0.5/24 dev wlan0
     ip link set wlan0 up
