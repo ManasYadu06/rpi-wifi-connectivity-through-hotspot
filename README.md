@@ -3,7 +3,7 @@
 Install required system packages:
 
 sudo apt update
-sudo apt install -y python3 python3-venv python3-pip hostapd dnsmasq network-manager git
+sudo apt install -y python3 python3-venv python3-pip hostapd dnsmasq network-manager git ffmpeg
 
 Unmask hostapd:
 
