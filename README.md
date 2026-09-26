@@ -30,8 +30,10 @@ sudo cp configs/dnsmasq.conf /etc/dnsmasq.conf
 
 🔧 Install Systemd Service
 sudo cp systemd/wifi-provision.service /etc/systemd/system/
+sudo cp systemd/wifi-ui.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable wifi-provision.service
+sudo systemctl enable wifi-ui.service
 
 🔁 Reboot
 sudo reboot
