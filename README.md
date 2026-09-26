@@ -125,6 +125,8 @@ rpi-wifi-connectivity-through-hotspot/
 │   ├── wifi-provision.service
 │   └── wifi-ui.service
 ├── requirements.txt
+├── wifi_boot.sh
+├── wifi_ui.py
 └── README.md
 ```
 
