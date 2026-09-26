@@ -45,6 +45,17 @@ fi
 
 
 # ------------------------------------------------
+# Function: Check if any client is connected to hotspot
+# ------------------------------------------------
+hotspot_has_clients() {
+    # iw station dump lists all connected stations on wlan0
+    local clients
+    clients=$(iw dev wlan0 station dump 2>/dev/null | grep -c "^Station")
+    [ "$clients" -gt 0 ]
+}
+
+
+# ------------------------------------------------
 # Function: Try WiFi
 # ------------------------------------------------
 try_wifi() {
@@ -64,9 +75,14 @@ try_wifi() {
         STATE=$(nmcli -t -f GENERAL.STATE device show wlan0 | cut -d: -f2)
 
         if echo "$STATE" | grep -q "100 (connected)"; then
-            IP=$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-            echo "WiFi connected with IP $IP" >> "$LOG"
-            return 0
+            # Confirm an IP was actually assigned via DHCP, not just link-local
+            IP=$(ip -4 addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}' | grep -v '^169\.254\.')
+            if [ -n "$IP" ]; then
+                echo "WiFi connected with IP $IP" >> "$LOG"
+                return 0
+            else
+                echo "nmcli reports connected but no routable IP yet, waiting..." >> "$LOG"
+            fi
         fi
 
         sleep $INTERVAL
@@ -94,9 +110,9 @@ start_hotspot() {
     systemctl start dnsmasq >> "$LOG" 2>&1
     systemctl start hostapd >> "$LOG" 2>&1
 
-    if ! pgrep -f wifi_ui.py > /dev/null; then
-        "$BASE_DIR/venv/bin/python" "$BASE_DIR/wifi_ui.py" >> "$LOG" 2>&1 &
-    fi
+    # wifi_ui.py is now managed by wifi-ui.service (Restart=always)
+    # Just ensure it's running; systemd will keep it alive
+    systemctl start wifi-ui >> "$LOG" 2>&1
 }
 
 
@@ -121,10 +137,17 @@ while true; do
 
     sleep $HOTSPOT_RETRY_INTERVAL
 
-    echo "Stopping hotspot to retry WiFi..." >> "$LOG"
+    # ── Don't interrupt an active provisioning session ──
+    if hotspot_has_clients; then
+        echo "Hotspot has active clients. Skipping WiFi retry to avoid interruption." >> "$LOG"
+        continue
+    fi
+
+    echo "No clients on hotspot. Stopping hotspot to retry WiFi..." >> "$LOG"
 
     systemctl stop hostapd >> "$LOG" 2>&1
     systemctl stop dnsmasq >> "$LOG" 2>&1
+    systemctl stop wifi-ui >> "$LOG" 2>&1
 
     if try_wifi; then
         echo "WiFi restored. Exiting hotspot mode." >> "$LOG"
