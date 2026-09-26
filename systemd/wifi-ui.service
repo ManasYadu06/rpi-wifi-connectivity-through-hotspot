@@ -1,0 +1,19 @@
+[Unit]
+Description=WiFi Provisioning UI
+After=network.target hostapd.service dnsmasq.service
+PartOf=wifi-provision.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/home/pi/rpi-wifi-connectivity-through-hotspot
+ExecStart=/home/pi/rpi-wifi-connectivity-through-hotspot/venv/bin/python /home/pi/rpi-wifi-connectivity-through-hotspot/wifi_ui.py
+Restart=always
+RestartSec=5
+
+# Stdout/stderr go to journald; also visible via: journalctl -u wifi-ui -f
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
